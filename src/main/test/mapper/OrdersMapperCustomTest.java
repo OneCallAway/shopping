@@ -9,6 +9,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import po.Orders;
 import po.OrdersCustom;
+import po.User;
 
 import javax.annotation.Resource;
 import java.io.InputStream;
@@ -72,6 +73,44 @@ public class OrdersMapperCustomTest {
 
         System.out.println(list);
 
+        sqlSession.close();
+    }
+
+    @Test
+    public void testFindUserAndItemsResultMap() throws Exception {
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+
+        OrdersMapperCustom ordersMapperCustom = sqlSession.getMapper(OrdersMapperCustom.class);
+
+        List<User> list = ordersMapperCustom.findUserAndItemsResultMap();
+
+        System.out.println(list);
+
+        sqlSession.close();
+    }
+
+    @Test
+    public void testFindOrdersUserLazyLoadingResultMap() throws Exception {
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+
+        OrdersMapperCustom ordersMapperCustom = sqlSession.getMapper(OrdersMapperCustom.class);
+
+        List<Orders> list = ordersMapperCustom.findOrdersUserLazyLoadingResultMap();
+
+//        遍历订单列表
+        for (Orders orders : list) {
+            /** 
+            * @author OneCallAway 18-4-3 
+            * @time 下午4:11 
+            * @method testFindOrdersUserLazyLoadingResultMap 
+            * @param [] 
+            * @return void 
+            * @version V1.0.0 
+            * @description 执行getUser()去查询用户信息,实现按需加载 
+            */
+            User user = orders.getUser();
+            System.out.println(user);
+        }
         sqlSession.close();
     }
 }
